@@ -1,0 +1,36 @@
+name: whatsapp_flutter_web
+description: An app built using Flutter for web
+
+environment:
+  # You must be using Flutter >=1.5.0 or Dart >=2.3.0
+  sdk: '>=2.3.0 <3.0.0'
+
+dependencies:
+  bloc_pattern: any
+  rxdart: ^0.22.1+1
+  hasura_connect: any
+  flutter_web: any
+  flutter_web_ui: any
+
+dev_dependencies:
+  build_runner: ^1.5.0
+  build_web_compilers: ^2.1.0
+  pedantic: ^1.7.0
+
+dependency_overrides:
+  flutter_web:
+    git:
+      url: https://github.com/flutter/flutter_web
+      path: packages/flutter_web
+  flutter_web_ui:
+    git:
+      url: https://github.com/flutter/flutter_web
+      path: packages/flutter_web_ui
+  hasura_connect:
+    git:
+      url: https://github.com/Flutterando/hasura_connect.git
+      ref: web
+  bloc_pattern: 
+    git:
+      url: https://github.com/jacobaraujo7/bloc-pattern.git
+      ref: web

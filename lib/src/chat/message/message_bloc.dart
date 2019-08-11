@@ -1,0 +1,70 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:flutter_web/material.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:whatsapp_flutter_web/src/shared/models/message_model.dart';
+
+import '../../app_bloc.dart';
+import '../../app_repository.dart';
+
+class MessageBloc extends BlocBase {
+  final AppRepository repository;
+  final AppBloc appBloc;
+  MessageBloc(this.repository, this.appBloc){
+    messagesOut = repository.getMessages()
+      ..listen((data) => itemsController.add(data))
+      ..listen(
+        (data) {
+          if (!moreController.isClosed) {
+            moreController.add(count <= data.length);
+          }
+        },
+      );
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent 
+          && moreController.value) {
+        count += 20;
+        print("busca");
+        repository.setLimit(count);
+      }
+    });
+  }
+
+  void sendMessage() async {
+    if (controller.text.trim().isNotEmpty) {
+      List<MessageModel> newList = List.from(itemsController.value);
+
+      newList.add(
+        MessageModel(
+          content: controller.text.trim(),
+          user: appBloc.userController.value,
+          id: 0,
+        ),
+      );
+
+      itemsController.add(newList);
+      repository.sendMessage(controller.text.trim());
+      await Future.delayed(Duration(milliseconds: 300));
+      controller.clear();
+    }
+  }
+
+  final controller = TextEditingController();
+  var scrollController = ScrollController();
+  int count = 20;
+  var moreController = BehaviorSubject.seeded(false);
+  var itemsController = BehaviorSubject<List<MessageModel>>();
+  
+  Stream<List<MessageModel>> messagesOut;
+
+  //dispose will be called automatically by closing its streams
+  @override
+  void dispose() async {
+    moreController.close();
+    controller.dispose();
+    repository.dispose();
+    await itemsController.drain();
+    itemsController.close();
+    super.dispose();
+  }
+}
