@@ -1,7 +1,8 @@
 # Whatsapp Flutter Web
 
 Whatsapp Web clone using Flutter Web and Hasura. Created by Slidy
-Mobile example: ![https://github.com/Flutterando/whatsapp_flutter_mobile](https://github.com/Flutterando/whatsapp_flutter_mobile) 
+
+[Mobile example](https://github.com/Flutterando/whatsapp_flutter_mobile) 
 
 ## Getting Started - Login
 Test user: test_user@flutterando.com.br
