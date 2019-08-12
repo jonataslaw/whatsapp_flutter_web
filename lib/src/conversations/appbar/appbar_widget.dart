@@ -1,17 +1,29 @@
 import 'package:flutter_web/material.dart';
+import 'package:whatsapp_flutter_web/src/app_module.dart';
+import 'package:whatsapp_flutter_web/src/shared/models/user_model.dart';
+
+import '../../app_bloc.dart';
 
 class AppbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final appBloc = AppModule.to.bloc<AppBloc>();
     return Container(
       height: 59,
       color: Theme.of(context).appBarTheme.color,
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Theme.of(context).dividerColor,
-          backgroundImage: NetworkImage(
-            "https://media.licdn.com/dms/image/C5603AQEKYex09zfWlg/profile-displayphoto-shrink_100_100/0?e=1563408000&v=beta&t=5FoN-PaQjLNlPGFqXKW2V4pvUqTPd5QfNNUnovyT5ic",
-          ),
+        leading: StreamBuilder<UserModel>(
+          stream: appBloc.userController,
+          builder: (context, userSnapshot) {
+            return CircleAvatar(
+              backgroundColor: Theme.of(context).dividerColor,
+              backgroundImage: (userSnapshot.hasData)
+                  ? NetworkImage(
+                      userSnapshot.data.picture,
+                    )
+                  : null,
+            );
+          },
         ),
         trailing: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
